@@ -365,6 +365,18 @@ main .section.teaser[data-section-status='loaded'] {
   font-size: var(--body-font-size-xs);
 }
 
+main .section.teaser-no-img {
+  background: white;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+  max-width: 1400px;
+  margin: 32px auto;
+  font-size: var(--body-font-size-s);
+}
+
 @media (min-width: 700px) {
   main .section.teaser[data-section-status='loaded'] {
     align-items: center;
