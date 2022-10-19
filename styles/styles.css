@@ -377,6 +377,14 @@ main .section.teaser-no-img {
   font-size: var(--body-font-size-s);
 }
 
+.left-align main .section.teaser-no-img {
+  justify-content: start;
+}
+
+main .section.teaser-no-img > div {
+  margin: unset;
+}
+
 @media (min-width: 700px) {
   main .section.teaser[data-section-status='loaded'] {
     align-items: center;
