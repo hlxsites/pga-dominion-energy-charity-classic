@@ -8,8 +8,6 @@ import {
   decorateLinkedPictures,
 } from '../../scripts/scripts.js';
 
-import { initGigya } from '../../scripts/delayed.js';
-
 /**
  * collapses all open nav sections
  * @param {Element} sections The container element
@@ -32,6 +30,8 @@ async function setupPartners(section) {
   const sponsors = pages.filter((e) => e.path.startsWith('/sponsors/'));
 
   if (sponsors.length > 0) {
+    const hasWhiteBg = [...section.classList].includes('white');
+    section.classList.add('has-sponsors');
     const partners = document.createElement('div');
     partners.className = 'nav-partners';
     partners.innerHTML = '<div class="nav-partners-title"><span>Proud Partners</span></div><div class="nav-partner-wrapper"></div>';
@@ -39,7 +39,7 @@ async function setupPartners(section) {
       const partner = document.createElement('div');
       partner.className = 'nav-partner';
       if (!i) partner.classList.add('nav-partner-appear');
-      partner.append(createOptimizedPicture(sponsor.logoWhite, sponsor.title, false, [{ width: '300' }]));
+      partner.append(createOptimizedPicture(hasWhiteBg ? sponsor.image : sponsor.logoWhite, sponsor.title, false, [{ width: '300' }]));
       partners.querySelector('.nav-partner-wrapper').append(partner);
     });
     setInterval(() => {
@@ -64,7 +64,9 @@ function setupUser(section) {
       </button>`;
   }
   const button = section.querySelector('button');
-  button.addEventListener('click', initGigya);
+  button.addEventListener('click', () => {
+    import('../../scripts/delayed.js').then((module) => module.initGigya());
+  });
 }
 
 function parseCountdown(ms) {
@@ -187,6 +189,22 @@ export default async function decorate(block) {
         </div>`;
         data.insertAdjacentHTML('beforeend', countdown);
         setInterval(updateCountdown, 60 * 1000); // update countdown every minute
+      }
+      // check for stored weather
+      const isStored = sessionStorage.getItem(`${placeholders.tourCode}${placeholders.tournamentId}Weather`);
+      if (isStored) {
+        // build weather from session storage
+        const weatherData = JSON.parse(isStored);
+        const weather = document.createElement('div');
+        weather.className = 'status-bar-weather';
+        weather.innerHTML = `<p>
+            <a href="/weather">
+              <span class="status-bar-location">${weatherData.location}</span>
+              <img src="${weatherData.icon}"/ >
+              <span class="status-bar-temp">${weatherData.temp}</span>
+            </a>
+          </p>`;
+        data.append(weather);
       }
     } catch (error) {
       // eslint-disable-next-line no-console
