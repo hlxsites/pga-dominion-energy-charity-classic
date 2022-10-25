@@ -20,6 +20,17 @@ async function mergeLocalNews(feed, maxItems) {
     }
     return false;
   });
+  // check feed items for relative links
+  feed.items.map((item) => {
+    const { link } = item;
+    const { host, pathname } = new URL(link);
+    if (host.includes('pgatour.com')) {
+      const splitPath = `/${pathname.split('/').slice(3).join('/')}`;
+      const match = matched.find((m) => splitPath.includes(m.path));
+      if (match) item.link = splitPath;
+    }
+    return item;
+  });
   const merged = [...feed.items, ...matched];
   const deduped = [...new Map(merged.map((m) => [
     new URL(m.link, window.location.href).pathname.split('.')[0],
@@ -85,6 +96,10 @@ function paginateNews(e) {
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
+  const videoPrefix = 'https://pga-tour-res.cloudinary.com/image/upload/c_fill,f_auto,g_face,h_311,q_auto,w_425/v1/';
+  const damPrefix = 'https://www.pgatour.com';
+  const newsURL = config.source;
+  const limit = config.limit || 8;
 
   const pinnedItems = [];
   const rows = [...block.children];
@@ -103,21 +118,19 @@ export default async function decorate(block) {
   });
 
   block.textContent = '';
+
   // set placeholder content
-  const placeholderUl = document.createElement('ul');
-  block.append(placeholderUl);
+  const ul = document.createElement('ul');
+  block.append(ul);
   for (let i = 0; i < 8; i += 1) {
     const placeholder = document.createElement('li');
     placeholder.className = 'news-placeholder';
-    placeholderUl.append(placeholder);
+    ul.append(placeholder);
   }
+
   const observer = new IntersectionObserver(async (entries) => {
     if (entries.some((entry) => entry.isIntersecting)) {
       observer.disconnect();
-      const videoPrefix = 'https://pga-tour-res.cloudinary.com/image/upload/c_fill,f_auto,g_face,h_311,q_auto,w_425/v1/';
-      const damPrefix = 'https://www.pgatour.com';
-      const newsURL = config.source;
-      const limit = config.limit || 8;
       // populate news content
       /* TODO: add CORS header, to be replaced with direct API */
       let directURL;
@@ -148,11 +161,11 @@ export default async function decorate(block) {
           ${video}
         `;
         li.append(a);
-        const toReplace = placeholderUl.querySelector('.news-placeholder');
+        const toReplace = ul.querySelector('.news-placeholder');
         if (toReplace) {
           toReplace.parentNode.replaceChild(li, toReplace);
         } else {
-          placeholderUl.appendChild(li);
+          ul.appendChild(li);
         }
       });
 
