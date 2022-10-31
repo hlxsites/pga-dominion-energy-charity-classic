@@ -60,6 +60,7 @@ main .columns > div > div.columns-contains-image {
   main .columns > div > div.columns-contains-image {
     min-height: 355px;
   }
+  
   main .columns > div > div:not(.columns-contains-image) {
     padding: 32px;
   }
