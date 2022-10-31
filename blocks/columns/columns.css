@@ -25,6 +25,10 @@ main .columns > div > div.columns-contains-image {
   main .columns > div > div.columns-contains-image {
     min-height: 355px;
   }
+
+  main .columns.small-images > div > div.columns-contains-image {
+    min-height: 170px;
+  }
 }
 
 @media (min-width: 900px) {
@@ -56,7 +60,6 @@ main .columns > div > div.columns-contains-image {
   main .columns > div > div.columns-contains-image {
     min-height: 355px;
   }
-
   main .columns > div > div:not(.columns-contains-image) {
     padding: 32px;
   }
@@ -104,6 +107,13 @@ main .columns img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+main .columns.small-images img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  max-width: 330px;
 }
 
 main .columns .button-container {
