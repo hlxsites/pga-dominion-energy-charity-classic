@@ -3,6 +3,7 @@
 ## Environments
 - Preview: https://main--pga-dominion-energy-charity-classic--hlxsites.hlx.page/
 - Live: https://main--pga-dominion-energy-charity-classic--hlxsites.hlx.live/
+- Prod: https://www.dominionenergycharityclassic.com/
 
 ## Installation
 
