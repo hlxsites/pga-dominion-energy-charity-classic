@@ -100,10 +100,6 @@ main .columns img {
   object-fit: cover;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/main
 main .columns.small-images img {
   object-fit: contain;
   max-width: 330px;
